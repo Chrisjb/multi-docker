@@ -1,5 +1,5 @@
 sudo: required
-language: global
+language: generic
 services:
   - docker
 
@@ -21,4 +21,18 @@ after_success:
   - docker push chrisjb123/multi-nginx
   - docker push chrisjb123/multi-server
   - docker push chrisjb123/multi-worker
-  
+
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: eu-west-2
+  app: multi-docker
+  env: MultiDocker-env
+  # this comes from s3 service created by EB
+  bucket_name: elasticbeanstalk-eu-west-2-930573987279
+  # we assign this:
+  bucket_path: docker-mult
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
